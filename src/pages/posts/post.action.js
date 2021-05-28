@@ -13,7 +13,9 @@ import {
 import {
   SNACKBAR_OPEN,
   GET_POSTS_PENDING,
-  GET_POSTS_SUCCESS
+  GET_POSTS_SUCCESS,
+  DELETE_POST,
+  ADD_POST
 } from '../../store/store.actions';
 const postStatus = (type, data) => {
   return {
@@ -39,10 +41,10 @@ export const getPostsAction = () => {
   };
 };
 
-export const deletePostAction = () => {
+export const deletePostAction = (postId) => {
   return async (dispatch) => {
     try {
-      const deleteStatus = await deletePost();
+      const deleteStatus = await deletePost(postId);
       if (deleteStatus.status === 200) {
         dispatch(
           postStatus(SNACKBAR_OPEN, {
@@ -50,9 +52,11 @@ export const deletePostAction = () => {
             severity: SNACKBAR_SUCCESS,
           })
         );
-        dispatch(postStatus(GET_POSTS_PENDING));
-        const data = await getPosts();
-        dispatch(postStatus(GET_POSTS_SUCCESS, data));
+        dispatch(postStatus(DELETE_POST, postId))
+        // In case of actual api
+        // dispatch(postStatus(GET_POSTS_PENDING));
+        // const data = await getPosts();
+        // dispatch(postStatus(GET_POSTS_SUCCESS, data));
       }
     } catch (e) {
       dispatch(
@@ -76,9 +80,11 @@ export const addPostAction = (postDetails) => {
             severity: SNACKBAR_SUCCESS,
           })
         );
-        dispatch(postStatus(GET_POSTS_PENDING));
-        const data = await getPosts();
-        dispatch(postStatus(GET_POSTS_SUCCESS, data));
+        dispatch(postStatus(ADD_POST, addPostStatus.data))
+         // In case of actual api
+        // dispatch(postStatus(GET_POSTS_PENDING));
+        // const data = await getPosts();
+        // dispatch(postStatus(GET_POSTS_SUCCESS, data));
       }
     } catch (e) {
       dispatch(
